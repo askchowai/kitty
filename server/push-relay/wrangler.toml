@@ -1,11 +1,11 @@
-# Vory push relay — a Cloudflare Worker that holds the developer's APNs key so end users never do.
+# Kitty push relay — a Cloudflare Worker that holds the developer's APNs key so end users never do.
 #   npm i -g wrangler && wrangler login
 #   wrangler kv namespace create DEVICES        # paste the id below
 #   wrangler secret put APNS_KEY_P8             # contents of AuthKey_XXXXXXXXXX.p8
 #   wrangler secret put APNS_KEY_ID
 #   wrangler secret put APNS_TEAM_ID
-#   wrangler deploy                             # prints the URL; set VORY_PUSH_RELAY_URL to it
-name = "vory-push-relay"
+#   wrangler deploy                             # prints the URL; set KITTY_PUSH_RELAY_URL to it
+name = "kitty-push-relay"
 main = "src/index.js"
 compatibility_date = "2025-06-01"
 

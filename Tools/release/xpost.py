@@ -4,14 +4,14 @@
     xpost.py <build> <notes.txt> [--icon icon.png] [--out dir] [--version 1.1]
 
 Reads the What-to-Test notes (the "Fixed in this build" / "Changed in this build" groups), draws a
-1600x900 card with the Vory cloud, "TestFlight build N" and the bullets, and prints a post for X:
+1600x900 card with the Kitty cloud, "TestFlight build N" and the bullets, and prints a post for X:
 a short one that fits 280 characters and a longer one. Needs Pillow and numpy. The icon is a 2048 px render
 of Shared/AppIcon.icon (ictool --rendition Default / Dark); pass --icon to use another.
 """
 import argparse, os, re, sys, textwrap
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-SITE = "vory.dev"
+SITE = "kitty.dev"
 
 def font(size, bold=False):
     for path, idx in [("/System/Library/Fonts/SFCompact.ttf", 0), ("/System/Library/Fonts/HelveticaNeue.ttc", 1 if bold else 0),
@@ -111,7 +111,7 @@ def render(build, version, groups, icon_path, out_path, theme="light", scale=1.5
     F = lambda size, bold=False: font(int(size * S), bold)
     def centred(text, f, y, fill):
         d.text(((W - d.textlength(text, font=f)) / 2, y * S), text, font=f, fill=fill)
-    centred("Vory", F(64, True), 458, headline)
+    centred("Kitty", F(64, True), 458, headline)
     centred(f"TestFlight build {build}", F(38), 540, accent)
     centred(f"Public beta {version}", F(28), 592, muted)
     # one column of bullets
@@ -136,7 +136,7 @@ def render(build, version, groups, icon_path, out_path, theme="light", scale=1.5
 def posts(build, groups):
     fixed = [short(b, 95) for b in groups.get("Fixed in this build", [])]
     changed = [short(b, 95) for b in groups.get("Changed in this build", [])]
-    head = f"Vory beta build {build} is on TestFlight."
+    head = f"Kitty beta build {build} is on TestFlight."
     parts = []
     if fixed: parts.append("Fixed: " + "; ".join(fixed[:3]) + ".")
     if changed: parts.append("New: " + "; ".join(changed[:2]) + ".")
@@ -161,8 +161,8 @@ if __name__ == "__main__":
     groups = {k: v for k, v in sections(open(a.notes).read()).items() if k in ("Fixed in this build", "Changed in this build")}
     if not groups: sys.exit("no 'Fixed in this build' / 'Changed in this build' bullets found")
     os.makedirs(a.out, exist_ok=True)
-    out = os.path.join(a.out, f"vory-build-{a.build}.png")
-    icon = a.icon or os.path.join(os.path.dirname(os.path.abspath(__file__)), "vory-icon-2048-light.png" if a.theme == "light" else "vory-icon-2048.png")
+    out = os.path.join(a.out, f"kitty-build-{a.build}.png")
+    icon = a.icon or os.path.join(os.path.dirname(os.path.abspath(__file__)), "kitty-icon-2048-light.png" if a.theme == "light" else "kitty-icon-2048.png")
     render(a.build, a.version, groups, icon, out, a.theme)
     s, l = posts(a.build, groups)
     print(out, "(+ .jpg for posting)"); print("\n--- short (%d chars) ---\n%s\n\n--- long ---\n%s" % (len(s), s, l))

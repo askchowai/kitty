@@ -1,0 +1,5 @@
+name: kitty-push
+version: "1.0.31"
+description: "Background notifications for the Kitty apps: watches this gateway's sessions and relays approvals, questions, finished turns and errors to the phone (encrypted) through the Kitty push relay, or straight to APNs with your own key. Installed by Kitty › Settings › Notifications."
+author: "Vorantx"
+hooks: []

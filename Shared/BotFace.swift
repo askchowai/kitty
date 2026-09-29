@@ -302,7 +302,7 @@ public enum BotFace {
         case .idle:
             break
         case .guide:
-            // Vory on a guided screen — not a working bot. In every eight seconds: one glance
+            // Kitty on a guided screen — not a working bot. In every eight seconds: one glance
             // down toward the speech bubble, one light across the rim, one tiny nod. Idle eyes
             // otherwise; the flat bottom never leaves the shelf.
             let l = (t + Double(seed % 7)).truncatingRemainder(dividingBy: 8)

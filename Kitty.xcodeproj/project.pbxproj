@@ -1,0 +1,1434 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA00000000000000000010 /* HermesLiveActivity.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AA00000000000000000021 /* HermesLiveActivity.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AA000000000000000000C3 /* KittyCore in Frameworks */ = {isa = PBXBuildFile; productRef = AA000000000000000000C1 /* KittyCore */; };
+		AA000000000000000000C4 /* KittyCore in Frameworks */ = {isa = PBXBuildFile; productRef = AA000000000000000000C2 /* KittyCore */; };
+		AA000000000000000000D0 /* KittyWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = AA000000000000000000D1 /* KittyWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AA000000000000000000D2 /* KittyWatchComplications.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AA000000000000000000D3 /* KittyWatchComplications.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AA000000000000000000D4 /* KittyCore in Frameworks */ = {isa = PBXBuildFile; productRef = AA000000000000000000D5 /* KittyCore */; };
+		AA000000000000000000D6 /* KittyCore in Frameworks */ = {isa = PBXBuildFile; productRef = AA000000000000000000D7 /* KittyCore */; };
+		AA000000000000000000D8 /* KittyCore in Frameworks */ = {isa = PBXBuildFile; productRef = AA000000000000000000D9 /* KittyCore */; };
+		AA00000000000000000100 /* KittyNotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AA00000000000000000101 /* KittyNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AA00000000000000000120 /* KittyNotificationContent.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AA00000000000000000121 /* KittyNotificationContent.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AA00000000000000000102 /* KittyCore in Frameworks */ = {isa = PBXBuildFile; productRef = AA00000000000000000103 /* KittyCore */; };
+		AA0000000000000000012E /* KittyCore in Frameworks */ = {isa = PBXBuildFile; productRef = AA00000000000000000129 /* KittyCore */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AA00000000000000000030 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA00000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA00000000000000000041;
+			remoteInfo = HermesLiveActivity;
+		};
+		AA00000000000000000031 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA00000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA00000000000000000040;
+			remoteInfo = Kitty;
+		};
+		AA00000000000000000032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA00000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA00000000000000000040;
+			remoteInfo = Kitty;
+		};
+		AA000000000000000000DA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA00000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA000000000000000000E0;
+			remoteInfo = KittyWatch;
+		};
+		AA000000000000000000DB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA00000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA000000000000000000E1;
+			remoteInfo = KittyWatchComplications;
+		};
+		AA00000000000000000104 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA00000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA00000000000000000110;
+			remoteInfo = KittyNotificationService;
+		};
+		AA00000000000000000122 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA00000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA00000000000000000125;
+			remoteInfo = KittyNotificationContent;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AA00000000000000000050 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				AA00000000000000000010 /* HermesLiveActivity.appex in Embed Foundation Extensions */,
+				AA00000000000000000100 /* KittyNotificationService.appex in Embed Foundation Extensions */,
+				AA00000000000000000120 /* KittyNotificationContent.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000000000000000000DC /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				AA000000000000000000D0 /* KittyWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000000000000000000DD /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				AA000000000000000000D2 /* KittyWatchComplications.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		AA00000000000000000020 /* Kitty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kitty.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA00000000000000000021 /* HermesLiveActivity.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HermesLiveActivity.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA00000000000000000022 /* KittyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KittyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA00000000000000000023 /* KittyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KittyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000000000000000000D1 /* KittyWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KittyWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000000000000000000D3 /* KittyWatchComplications.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = KittyWatchComplications.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA00000000000000000101 /* KittyNotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = KittyNotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA00000000000000000121 /* KittyNotificationContent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = KittyNotificationContent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AA00000000000000000064 /* Exceptions for "Kitty" folder in "Kitty" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AA00000000000000000040 /* Kitty */;
+		};
+		AA00000000000000000065 /* Exceptions for "HermesLiveActivity" folder in "HermesLiveActivity" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AA00000000000000000041 /* HermesLiveActivity */;
+		};
+		AA000000000000000000DE /* Exceptions for "Shared" folder in "HermesLiveActivity" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppIcon.icon,
+			);
+			target = AA00000000000000000041 /* HermesLiveActivity */;
+		};
+		AA0000000000000000012F /* Exceptions for "Shared" folder in "KittyNotificationService" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppIcon.icon,
+			);
+			target = AA00000000000000000110 /* KittyNotificationService */;
+		};
+		AA00000000000000000130 /* Exceptions for "Shared" folder in "KittyNotificationContent" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppIcon.icon,
+			);
+			target = AA00000000000000000125 /* KittyNotificationContent */;
+		};
+		AA000000000000000000F6 /* Exceptions for "KittyWatch" folder in "KittyWatch" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AA000000000000000000E0 /* KittyWatch */;
+		};
+		AA000000000000000000F7 /* Exceptions for "KittyWatchComplications" folder in "KittyWatchComplications" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AA000000000000000000E1 /* KittyWatchComplications */;
+		};
+		AA00000000000000000105 /* Exceptions for "KittyNotificationService" folder in "KittyNotificationService" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AA00000000000000000110 /* KittyNotificationService */;
+		};
+		AA00000000000000000123 /* Exceptions for "KittyNotificationContent" folder in "KittyNotificationContent" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AA00000000000000000125 /* KittyNotificationContent */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		AA00000000000000000060 /* Kitty */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AA00000000000000000064 /* Exceptions for "Kitty" folder in "Kitty" target */,
+			);
+			path = Kitty;
+			sourceTree = "<group>";
+		};
+		AA00000000000000000061 /* KittyTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = KittyTests;
+			sourceTree = "<group>";
+		};
+		AA00000000000000000062 /* HermesLiveActivity */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AA00000000000000000065 /* Exceptions for "HermesLiveActivity" folder in "HermesLiveActivity" target */,
+			);
+			path = HermesLiveActivity;
+			sourceTree = "<group>";
+		};
+		AA00000000000000000063 /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AA000000000000000000DE /* Exceptions for "Shared" folder in "HermesLiveActivity" target */,
+				AA0000000000000000012F /* Exceptions for "Shared" folder in "KittyNotificationService" target */,
+				AA00000000000000000130 /* Exceptions for "Shared" folder in "KittyNotificationContent" target */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		AA00000000000000000066 /* KittyUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = KittyUITests;
+			sourceTree = "<group>";
+		};
+		AA000000000000000000E2 /* KittyWatch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AA000000000000000000F6 /* Exceptions for "KittyWatch" folder in "KittyWatch" target */,
+			);
+			path = KittyWatch;
+			sourceTree = "<group>";
+		};
+		AA000000000000000000E3 /* KittyWatchComplications */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AA000000000000000000F7 /* Exceptions for "KittyWatchComplications" folder in "KittyWatchComplications" target */,
+			);
+			path = KittyWatchComplications;
+			sourceTree = "<group>";
+		};
+		AA000000000000000000E4 /* Widgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Widgets;
+			sourceTree = "<group>";
+		};
+		AA00000000000000000106 /* KittyNotificationService */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AA00000000000000000105 /* Exceptions for "KittyNotificationService" folder in "KittyNotificationService" target */,
+			);
+			path = KittyNotificationService;
+			sourceTree = "<group>";
+		};
+		AA00000000000000000124 /* KittyNotificationContent */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AA00000000000000000123 /* Exceptions for "KittyNotificationContent" folder in "KittyNotificationContent" target */,
+			);
+			path = KittyNotificationContent;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA00000000000000000091 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000000000000000000C3 /* KittyCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000000000000000094 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000000000000000000D8 /* KittyCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000000000000000097 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000000000000000000C4 /* KittyCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA0000000000000000009A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000000000000000000E5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000000000000000000D4 /* KittyCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000000000000000000E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000000000000000000D6 /* KittyCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000000000000000107 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA00000000000000000102 /* KittyCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000000000000000127 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA0000000000000000012E /* KittyCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA00000000000000000070 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA00000000000000000020 /* Kitty.app */,
+				AA00000000000000000021 /* HermesLiveActivity.appex */,
+				AA000000000000000000D1 /* KittyWatch.app */,
+				AA000000000000000000D3 /* KittyWatchComplications.appex */,
+				AA00000000000000000101 /* KittyNotificationService.appex */,
+				AA00000000000000000121 /* KittyNotificationContent.appex */,
+				AA00000000000000000022 /* KittyTests.xctest */,
+				AA00000000000000000023 /* KittyUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AA00000000000000000071 = {
+			isa = PBXGroup;
+			children = (
+				AA00000000000000000060 /* Kitty */,
+				AA00000000000000000063 /* Shared */,
+				AA00000000000000000062 /* HermesLiveActivity */,
+				AA000000000000000000E2 /* KittyWatch */,
+				AA000000000000000000E3 /* KittyWatchComplications */,
+				AA000000000000000000E4 /* Widgets */,
+				AA00000000000000000106 /* KittyNotificationService */,
+				AA00000000000000000124 /* KittyNotificationContent */,
+				AA00000000000000000061 /* KittyTests */,
+				AA00000000000000000066 /* KittyUITests */,
+				AA00000000000000000070 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA00000000000000000040 /* Kitty */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA00000000000000000080 /* Build configuration list for PBXNativeTarget "Kitty" */;
+			buildPhases = (
+				AA00000000000000000090 /* Sources */,
+				AA00000000000000000091 /* Frameworks */,
+				AA00000000000000000092 /* Resources */,
+				AA00000000000000000050 /* Embed Foundation Extensions */,
+				AA000000000000000000DC /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA000000000000000000A0 /* PBXTargetDependency */,
+				AA000000000000000000EA /* PBXTargetDependency */,
+				AA00000000000000000111 /* PBXTargetDependency */,
+				AA0000000000000000012A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AA00000000000000000060 /* Kitty */,
+				AA00000000000000000063 /* Shared */,
+			);
+			name = Kitty;
+			packageProductDependencies = (
+				AA000000000000000000C1 /* KittyCore */,
+			);
+			productName = Kitty;
+			productReference = AA00000000000000000020 /* Kitty.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AA00000000000000000041 /* HermesLiveActivity */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA00000000000000000082 /* Build configuration list for PBXNativeTarget "HermesLiveActivity" */;
+			buildPhases = (
+				AA00000000000000000093 /* Sources */,
+				AA00000000000000000094 /* Frameworks */,
+				AA00000000000000000095 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				AA00000000000000000062 /* HermesLiveActivity */,
+				AA00000000000000000063 /* Shared */,
+				AA000000000000000000E4 /* Widgets */,
+			);
+			name = HermesLiveActivity;
+			packageProductDependencies = (
+				AA000000000000000000D9 /* KittyCore */,
+			);
+			productName = HermesLiveActivity;
+			productReference = AA00000000000000000021 /* HermesLiveActivity.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		AA00000000000000000042 /* KittyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA00000000000000000083 /* Build configuration list for PBXNativeTarget "KittyTests" */;
+			buildPhases = (
+				AA00000000000000000096 /* Sources */,
+				AA00000000000000000097 /* Frameworks */,
+				AA00000000000000000098 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA000000000000000000A1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AA00000000000000000061 /* KittyTests */,
+			);
+			name = KittyTests;
+			packageProductDependencies = (
+				AA000000000000000000C2 /* KittyCore */,
+			);
+			productName = KittyTests;
+			productReference = AA00000000000000000022 /* KittyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		AA00000000000000000043 /* KittyUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA00000000000000000084 /* Build configuration list for PBXNativeTarget "KittyUITests" */;
+			buildPhases = (
+				AA00000000000000000099 /* Sources */,
+				AA0000000000000000009A /* Frameworks */,
+				AA0000000000000000009B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA000000000000000000A2 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AA00000000000000000066 /* KittyUITests */,
+			);
+			name = KittyUITests;
+			packageProductDependencies = (
+			);
+			productName = KittyUITests;
+			productReference = AA00000000000000000023 /* KittyUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		AA000000000000000000E0 /* KittyWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA000000000000000000F0 /* Build configuration list for PBXNativeTarget "KittyWatch" */;
+			buildPhases = (
+				AA000000000000000000E7 /* Sources */,
+				AA000000000000000000E5 /* Frameworks */,
+				AA000000000000000000E8 /* Resources */,
+				AA000000000000000000DD /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA000000000000000000EB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AA00000000000000000063 /* Shared */,
+				AA000000000000000000E2 /* KittyWatch */,
+			);
+			name = KittyWatch;
+			packageProductDependencies = (
+				AA000000000000000000D5 /* KittyCore */,
+			);
+			productName = KittyWatch;
+			productReference = AA000000000000000000D1 /* KittyWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AA000000000000000000E1 /* KittyWatchComplications */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA000000000000000000F1 /* Build configuration list for PBXNativeTarget "KittyWatchComplications" */;
+			buildPhases = (
+				AA000000000000000000E9 /* Sources */,
+				AA000000000000000000E6 /* Frameworks */,
+				AA000000000000000000EC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				AA000000000000000000E3 /* KittyWatchComplications */,
+				AA000000000000000000E4 /* Widgets */,
+			);
+			name = KittyWatchComplications;
+			packageProductDependencies = (
+				AA000000000000000000D7 /* KittyCore */,
+			);
+			productName = KittyWatchComplications;
+			productReference = AA000000000000000000D3 /* KittyWatchComplications.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		AA00000000000000000110 /* KittyNotificationService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA00000000000000000112 /* Build configuration list for PBXNativeTarget "KittyNotificationService" */;
+			buildPhases = (
+				AA00000000000000000108 /* Sources */,
+				AA00000000000000000107 /* Frameworks */,
+				AA00000000000000000109 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				AA00000000000000000106 /* KittyNotificationService */,
+				AA00000000000000000063 /* Shared */,
+			);
+			name = KittyNotificationService;
+			packageProductDependencies = (
+				AA00000000000000000103 /* KittyCore */,
+			);
+			productName = KittyNotificationService;
+			productReference = AA00000000000000000101 /* KittyNotificationService.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		AA00000000000000000125 /* KittyNotificationContent */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA0000000000000000012B /* Build configuration list for PBXNativeTarget "KittyNotificationContent" */;
+			buildPhases = (
+				AA00000000000000000126 /* Sources */,
+				AA00000000000000000127 /* Frameworks */,
+				AA00000000000000000128 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				AA00000000000000000124 /* KittyNotificationContent */,
+				AA00000000000000000063 /* Shared */,
+			);
+			name = KittyNotificationContent;
+			packageProductDependencies = (
+				AA00000000000000000129 /* KittyCore */,
+			);
+			productName = KittyNotificationContent;
+			productReference = AA00000000000000000121 /* KittyNotificationContent.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA00000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					AA00000000000000000042 = {
+						TestTargetID = AA00000000000000000040;
+					};
+					AA00000000000000000043 = {
+						TestTargetID = AA00000000000000000040;
+					};
+				};
+			};
+			buildConfigurationList = AA00000000000000000081 /* Build configuration list for PBXProject "Kitty" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AA00000000000000000071;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				AA000000000000000000C0 /* XCLocalSwiftPackageReference "Packages/KittyCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = AA00000000000000000070 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA00000000000000000040 /* Kitty */,
+				AA00000000000000000041 /* HermesLiveActivity */,
+				AA000000000000000000E0 /* KittyWatch */,
+				AA000000000000000000E1 /* KittyWatchComplications */,
+				AA00000000000000000110 /* KittyNotificationService */,
+				AA00000000000000000125 /* KittyNotificationContent */,
+				AA00000000000000000042 /* KittyTests */,
+				AA00000000000000000043 /* KittyUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA00000000000000000092 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000000000000000095 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000000000000000098 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA0000000000000000009B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000000000000000000E8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000000000000000000EC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000000000000000109 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000000000000000128 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA00000000000000000090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000000000000000093 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000000000000000096 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000000000000000099 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000000000000000000E7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000000000000000000E9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000000000000000108 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000000000000000126 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AA000000000000000000A0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA00000000000000000041 /* HermesLiveActivity */;
+			targetProxy = AA00000000000000000030 /* PBXContainerItemProxy */;
+		};
+		AA000000000000000000A1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA00000000000000000040 /* Kitty */;
+			targetProxy = AA00000000000000000031 /* PBXContainerItemProxy */;
+		};
+		AA000000000000000000A2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA00000000000000000040 /* Kitty */;
+			targetProxy = AA00000000000000000032 /* PBXContainerItemProxy */;
+		};
+		AA000000000000000000EA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA000000000000000000E0 /* KittyWatch */;
+			targetProxy = AA000000000000000000DA /* PBXContainerItemProxy */;
+		};
+		AA000000000000000000EB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA000000000000000000E1 /* KittyWatchComplications */;
+			targetProxy = AA000000000000000000DB /* PBXContainerItemProxy */;
+		};
+		AA00000000000000000111 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA00000000000000000110 /* KittyNotificationService */;
+			targetProxy = AA00000000000000000104 /* PBXContainerItemProxy */;
+		};
+		AA0000000000000000012A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA00000000000000000125 /* KittyNotificationContent */;
+			targetProxy = AA00000000000000000122 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		AA000000000000000000B0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_DEBUG_DYLIB = NO;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				KITTY_PUSH_RELAY_URL = "";
+			};
+			name = Debug;
+		};
+		AA000000000000000000B1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				VALIDATE_PRODUCT = YES;
+				KITTY_PUSH_RELAY_URL = "";
+			};
+			name = Release;
+		};
+		AA000000000000000000B2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_DEBUG_DYLIB = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Kitty/Kitty.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Kitty/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA000000000000000000B3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Kitty/Kitty.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Kitty/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AA000000000000000000B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_DEBUG_DYLIB = NO;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HermesLiveActivity/HermesLiveActivity.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HermesLiveActivity/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty.LiveActivity;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA000000000000000000B5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HermesLiveActivity/HermesLiveActivity.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HermesLiveActivity/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty.LiveActivity;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AA000000000000000000B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_DEBUG_DYLIB = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kitty.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Kitty";
+			};
+			name = Debug;
+		};
+		AA000000000000000000B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kitty.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Kitty";
+			};
+			name = Release;
+		};
+		AA000000000000000000B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_DEBUG_DYLIB = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Kitty;
+			};
+			name = Debug;
+		};
+		AA000000000000000000B9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Kitty;
+			};
+			name = Release;
+		};
+		AA000000000000000000F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_DEBUG_DYLIB = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = KittyWatch/KittyWatch.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = KittyWatch/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		AA000000000000000000F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = KittyWatch/KittyWatch.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = KittyWatch/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
+		AA000000000000000000F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_DEBUG_DYLIB = NO;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = KittyWatchComplications/KittyWatchComplications.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = KittyWatchComplications/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty.watchkitapp.complications;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		AA000000000000000000F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = KittyWatchComplications/KittyWatchComplications.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = KittyWatchComplications/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty.watchkitapp.complications;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
+		AA00000000000000000113 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_DEBUG_DYLIB = NO;
+				CODE_SIGN_ENTITLEMENTS = KittyNotificationService/KittyNotificationService.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = KittyNotificationService/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty.notifications;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA0000000000000000012C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_DEBUG_DYLIB = NO;
+				CODE_SIGN_ENTITLEMENTS = KittyNotificationContent/KittyNotificationContent.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = KittyNotificationContent/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					UserNotifications,
+					"-framework",
+					UserNotificationsUI,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty.notificationcontent;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA00000000000000000114 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = KittyNotificationService/KittyNotificationService.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = KittyNotificationService/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty.notifications;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AA0000000000000000012D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = KittyNotificationContent/KittyNotificationContent.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4PLALDQ8V8;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = KittyNotificationContent/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					UserNotifications,
+					"-framework",
+					UserNotificationsUI,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vorantx.kitty.notificationcontent;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA00000000000000000080 /* Build configuration list for PBXNativeTarget "Kitty" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000000000000000000B2 /* Debug */,
+				AA000000000000000000B3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA00000000000000000081 /* Build configuration list for PBXProject "Kitty" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000000000000000000B0 /* Debug */,
+				AA000000000000000000B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA00000000000000000082 /* Build configuration list for PBXNativeTarget "HermesLiveActivity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000000000000000000B4 /* Debug */,
+				AA000000000000000000B5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA00000000000000000083 /* Build configuration list for PBXNativeTarget "KittyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000000000000000000B6 /* Debug */,
+				AA000000000000000000B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA00000000000000000084 /* Build configuration list for PBXNativeTarget "KittyUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000000000000000000B8 /* Debug */,
+				AA000000000000000000B9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA000000000000000000F0 /* Build configuration list for PBXNativeTarget "KittyWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000000000000000000F2 /* Debug */,
+				AA000000000000000000F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA000000000000000000F1 /* Build configuration list for PBXNativeTarget "KittyWatchComplications" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000000000000000000F4 /* Debug */,
+				AA000000000000000000F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA00000000000000000112 /* Build configuration list for PBXNativeTarget "KittyNotificationService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA00000000000000000113 /* Debug */,
+				AA00000000000000000114 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA0000000000000000012B /* Build configuration list for PBXNativeTarget "KittyNotificationContent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000012C /* Debug */,
+				AA0000000000000000012D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		AA000000000000000000C0 /* XCLocalSwiftPackageReference "Packages/KittyCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/KittyCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AA000000000000000000C1 /* KittyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KittyCore;
+		};
+		AA000000000000000000C2 /* KittyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KittyCore;
+		};
+		AA000000000000000000D5 /* KittyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KittyCore;
+		};
+		AA000000000000000000D7 /* KittyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KittyCore;
+		};
+		AA000000000000000000D9 /* KittyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KittyCore;
+		};
+		AA00000000000000000103 /* KittyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KittyCore;
+		};
+		AA00000000000000000129 /* KittyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KittyCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = AA00000000000000000001 /* Project object */;
+}

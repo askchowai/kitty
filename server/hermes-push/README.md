@@ -20,7 +20,7 @@ APNs key, and never contacts anything except your gateway and Apple.
 
 ## Setup from the app (recommended)
 
-**Vory › Settings › Notifications › Set up the push companion…** does everything except run one
+**Kitty › Settings › Notifications › Set up the push companion…** does everything except run one
 command on the gateway machine:
 
 1. You pick your `AuthKey_….p8` (Files app / iCloud Drive / AirDrop). Key ID is read from the
@@ -51,7 +51,7 @@ export HERMES_PUSH_GATEWAY_TOKEN=<HERMES_DASHBOARD_SESSION_TOKEN> # loopback / u
 export HERMES_PUSH_APNS_KEY_FILE=$HOME/AuthKey_XXXXXXXXXX.p8
 export HERMES_PUSH_APNS_KEY_ID=XXXXXXXXXX
 export HERMES_PUSH_APNS_TEAM_ID=YYYYYYYYYY
-export HERMES_PUSH_APNS_TOPIC=com.vorantx.vory        # the bundle id you build the app with
+export HERMES_PUSH_APNS_TOPIC=com.vorantx.kitty        # the bundle id you build the app with
 
 $HERMES_HOME/hermes-agent/venv/bin/python hermes_push.py
 ```

@@ -1,0 +1,692 @@
+import SwiftUI
+import KittyCore
+
+struct ChatRoute: Hashable {
+    var storedID: String?
+    var title: String?
+    /// Sessions are profile-scoped on the gateway; when set, the chat screen selects this bot first.
+    var profile: String?
+    /// Sent as soon as the chat opens: the first message typed in the compose sheet.
+    var initialText: String? = nil
+    /// Files picked in the compose sheet; staged into the chat and sent with the first message.
+    var initialAttachments: [AttachmentPreview] = []
+}
+
+struct ChatListView: View {
+    @Environment(AppModel.self) private var model
+    @State private var sessions: [StoredSession] = []
+    /// Bumped by a tap on the selected Chats tab: the list scrolls to its first row.
+    @State private var scrollToTop = 0
+    /// Chats the user deleted here, so a pinned row is not kept alive from memory afterwards.
+    @State private var droppedIDs: Set<String> = []
+    @State private var searchText = ""
+    @State private var searchResults: [StoredSession] = []
+    @State private var loading = false
+    @State private var errorText: String?
+    @State private var path = NavigationPath()
+    @State private var pendingDelete: StoredSession?
+    @State private var lastRouted: PendingRoute?
+    /// Every profile's chats in one list, newest first, with the bot's avatar on each row.
+    @AppStorage("chats.allBots") private var allBots = false
+    @State private var showNewChat = false
+    @State private var showNewBot = false
+    @AppStorage(ChatSummarizer.titlesKey) private var aiTitles = ChatSummarizer.titlesOn
+    @AppStorage(ChatSummarizer.previewsKey) private var aiPreviews = ChatSummarizer.previewsOn
+    private var aiSummaries: Bool { aiTitles || aiPreviews }
+    private var summarizer: ChatSummarizer { ChatSummarizer.shared }
+    @State private var rooms: [Room] = []
+    /// Each room's recent log, for the row's preview and its summary.
+    @State private var roomLogs: [String: [RoomEvent]] = [:]
+    // Filters (the funnel button): what to show and in which order.
+    @AppStorage("chats.filter.pinned") private var pinnedOnly = false
+    @AppStorage("chats.filter.needsYou") private var needsYouOnly = false
+    @AppStorage("chats.filter.live") private var liveOnly = false
+    @AppStorage("chats.filter.archived") private var showArchived = true
+    @AppStorage("chats.sort") private var sortKey = "recent"
+    @AppStorage("chats.filter.groups") private var groupsOnly = false
+    /// Rooms have no archive on the gateway; archived ones are remembered here.
+    @AppStorage("chats.archivedRooms") private var archivedRoomsRaw = ""
+    @State private var pendingRoomDelete: Room?
+    private var archivedRooms: Set<String> { Set(archivedRoomsRaw.split(separator: ",").map(String.init)) }
+    private var filtering: Bool { pinnedOnly || needsYouOnly || liveOnly || groupsOnly || !showArchived || sortKey != "recent" }
+    /// The profile menu's icons are rendered images; UIKit keeps the built menu, so it is given a
+    /// new identity whenever a bot's colour or look changes.
+    @AppStorage(BotColors.storageKey) private var botColorsRaw = ""
+    @AppStorage(BotAvatarStore.storageKey) private var botAvatarsRaw = ""
+    @AppStorage(BotAvatarStore.glassAllKey) private var glassAll = false
+    @Environment(\.colorScheme) private var colorScheme
+    /// Mirrors the tab bar's minimize-on-scroll so the compose circle drops beside the collapsed bar.
+
+    private var runtime: GatewayRuntime? { model.runtime }
+
+    var body: some View {
+        NavigationStack(path: $path) {
+            Group {
+                if let runtime {
+                    list(runtime)
+                } else {
+                    ContentUnavailableView("No gateway selected", systemImage: "antenna.radiowaves.left.and.right.slash", description: Text(model.activationError ?? "Choose a gateway in Settings."))
+                }
+            }
+            .navigationTitle("Chats")
+            .navigationBarTitleDisplayMode(.inline)
+            .background(InteractivePopEnabler())
+            // Driven by the stack's own path rather than by the pushed screen: the bar starts
+            // coming back the instant a pop begins instead of after the transition settles.
+            .onChange(of: path.isEmpty, initial: true) { _, empty in model.chatsPathOpen = !empty; model.tabAtRoot[.chats] = empty }
+            .onChange(of: model.popToRoot[.chats]) { _, _ in path = NavigationPath() }
+            // A tap on the Chats tab while it is selected also brings the list back to the top.
+            .onChange(of: model.tabReselected[.chats]) { _, _ in scrollToTop += 1 }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) { profileMenu }
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Button { showNewBot = true } label: { Image(systemName: "plus") }.accessibilityLabel("New bot")
+                    filterMenu
+                }
+            }
+            // Compose: the Messages-style sheet (To: bots, first message).
+            .onChange(of: model.newChatRequest) { _, r in
+                guard r != nil, model.selectedTab == .chats, runtime != nil else { return }
+                showNewChat = true
+            }
+            .sheet(isPresented: $showNewBot) { if let runtime { NewBotSheet(runtime: runtime) } }
+            .sheet(isPresented: $showNewChat) {
+                if let runtime {
+                    NewChatSheet(runtime: runtime) { start in
+                        switch start {
+                        case .chat(let profile, let text, let attachments): path.append(ChatRoute(storedID: nil, title: nil, profile: profile, initialText: text, initialAttachments: attachments))
+                        case .group(let room, let text): rooms.insert(room, at: 0); path.append(RoomRoute(room: room, initialText: text))
+                        }
+                    }
+                }
+            }
+            .navigationDestination(for: ChatRoute.self) { route in ConversationView(route: route) }
+            .navigationDestination(for: RoomRoute.self) { r in RoomView(room: r.room, initialText: r.initialText) }
+            .onChange(of: searchText) { _, q in Task { await search(q) } }
+            .refreshable { await load() }
+            .task(id: runtime?.connection.id) { await load() }
+            .task(id: runtime?.selectedProfile) { await load() }
+            .task(id: allBots) { await load() }
+            // The socket coming up is when the gateway becomes reachable; do not wait for a pull.
+            .onChange(of: runtime?.socketState) { _, s in if case .open? = s { Task { await load() } } }
+            .onReceive(NotificationCenter.default.publisher(for: .hermesSessionsChanged)) { _ in Task { await load() } }
+            .onChange(of: model.pendingRoute) { _, r in
+                guard let r, r != lastRouted else { return }
+                lastRouted = r
+                // Already looking at that chat: nothing to push (a second copy of the same chat
+                // used to land on top, and a confirmation asked there could go to the covered one).
+                guard model.visibleChatID != r.storedSessionID else { return }
+                path.append(ChatRoute(storedID: r.storedSessionID, title: nil))
+            }
+            .alert("Delete group chat?", isPresented: Binding(get: { pendingRoomDelete != nil }, set: { if !$0 { pendingRoomDelete = nil } })) {
+                Button("Delete", role: .destructive) { if let r = pendingRoomDelete { Task { await deleteRoom(r) } } }
+                Button("Cancel", role: .cancel) {}
+            } message: { Text("This disbands the group on the gateway. Its messages stay in the gateway's log.") }
+            .alert("Delete chat?", isPresented: Binding(get: { pendingDelete != nil }, set: { if !$0 { pendingDelete = nil } })) {
+                Button("Delete", role: .destructive) { if let s = pendingDelete { Task { await delete(s) } } }
+                Button("Cancel", role: .cancel) {}
+            } message: { Text("This removes the session and its transcript from the gateway.") }
+        }
+    }
+
+    private var profileMenu: some View {
+        Menu {
+            if let runtime {
+                Picker("Profile", selection: Binding(get: { runtime.selectedProfile ?? "" }, set: { runtime.selectedProfile = $0 })) {
+                    ForEach(runtime.profiles) { p in
+                        Label { Text(p.label) } icon: { Image(uiImage: BotAvatarImage.make(profile: p.name, scheme: colorScheme)).renderingMode(.original) }.tag(p.name)
+                    }
+                }
+                Toggle(isOn: $allBots) { Label("All bots", systemImage: "person.2") }
+                Divider()
+                Section(runtime.connection.name) {
+                    Label(runtime.socketState.label, systemImage: connectionSymbol(runtime.socketState))
+                    if case .open = runtime.socketState {} else {
+                        Button { Task { await runtime.reconnectNow() } } label: { Label("Reconnect", systemImage: "arrow.clockwise") }
+                    }
+                }
+                // Two gateways (a main machine and a homelab, say): switch here instead of
+                // Settings › Gateways. Sessions belong to each gateway, so the list reloads.
+                if model.store.connections.count > 1 {
+                    Section("Switch gateway") {
+                        ForEach(model.store.connections.filter { $0.id != runtime.connection.id }) { c in
+                            Button { Task { await model.activate(c) } } label: { Label(c.name, systemImage: "server.rack") }
+                        }
+                    }
+                }
+            }
+        } label: {
+            // A fixed-size avatar: a text label changed width with each profile name and the bar
+            // visibly jumped as it re-laid out.
+            // A rendered, untinted image: live glass went murky on the toolbar's glass and a
+            // painted view picked up the toolbar's tint in light mode.
+            Image(uiImage: BotAvatarImage.make(profile: runtime?.selectedProfile ?? "?", size: 26, scheme: colorScheme)).renderingMode(.original)
+                .accessibilityLabel("Profile: \(runtime?.selectedProfile ?? "none")")
+        }
+        .id("\(botColorsRaw)|\(botAvatarsRaw)|\(glassAll)|\(colorScheme == .light)")
+    }
+
+    private var filterMenu: some View {
+        Menu {
+            Section("Show") {
+                Toggle(isOn: $pinnedOnly) { Label("Pinned only", systemImage: "pin") }
+                Toggle(isOn: $needsYouOnly) { Label("Needs you", systemImage: "exclamationmark.bubble") }
+                Toggle(isOn: $liveOnly) { Label("Working now", systemImage: "bolt") }
+                Toggle(isOn: $showArchived) { Label("Archived", systemImage: "archivebox") }
+                Toggle(isOn: $groupsOnly) { Label("Group chats", systemImage: "person.3") }
+            }
+            Picker("Sort by", selection: $sortKey) {
+                Label("Recent", systemImage: "clock").tag("recent")
+                Label("Title", systemImage: "textformat").tag("title")
+                Label("Bot", systemImage: "person").tag("bot")
+                Label("Model", systemImage: "cpu").tag("model")
+            }
+            if filtering {
+                Button { pinnedOnly = false; needsYouOnly = false; liveOnly = false; groupsOnly = false; showArchived = true; sortKey = "recent" } label: { Label("Clear filters", systemImage: "xmark.circle") }
+            }
+        } label: {
+            Image(systemName: filtering ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                .accessibilityLabel(filtering ? "Filters (on)" : "Filters")
+        }
+        .accessibilityIdentifier("chats.filters")
+    }
+
+    /// The filters and the sort applied to the loaded (or searched) sessions.
+    private func filtered(_ list: [StoredSession], runtime: GatewayRuntime) -> [StoredSession] {
+        var out = list
+        if pinnedOnly { out = out.filter { $0.pinned == true } }
+        if needsYouOnly { out = out.filter { runtime.needsAttention.contains($0.id) } }
+        if liveOnly { out = out.filter { runtime.chatForStored($0.id)?.isRunning ?? false } }
+        if !showArchived { out = out.filter { $0.archived != true } }
+        // Every order keeps pinned chats first; within each half the chosen key decides, and
+        // equal keys fall back to most recent (the sort is not stable on its own).
+        func recent(_ a: StoredSession, _ b: StoredSession) -> Bool { (a.lastActive ?? a.startedAt ?? 0) > (b.lastActive ?? b.startedAt ?? 0) }
+        func text(_ a: String, _ b: String, _ x: StoredSession, _ y: StoredSession) -> Bool {
+            let c = a.localizedCaseInsensitiveCompare(b)
+            return c == .orderedSame ? recent(x, y) : c == .orderedAscending
+        }
+        func shortModel(_ s: StoredSession) -> String { (s.model ?? "").split(separator: "/").last.map(String.init) ?? (s.model ?? "") }
+        out.sort { a, b in
+            let pa = a.pinned ?? false, pb = b.pinned ?? false
+            if pa != pb { return pa }
+            switch sortKey {
+            case "title": return text(a.displayTitle, b.displayTitle, a, b)
+            case "bot": return text(a.profile ?? "", b.profile ?? "", a, b)
+            case "model": return text(shortModel(a), shortModel(b), a, b)
+            default: return recent(a, b)
+            }
+        }
+        return out
+    }
+
+    private func connectionSymbol(_ s: SocketState) -> String {
+        switch s {
+        case .open: return "checkmark.circle.fill"
+        case .connecting, .reconnecting: return "arrow.triangle.2.circlepath"
+        case .authRejected, .failed: return "xmark.octagon.fill"
+        case .idle: return "circle"
+        }
+    }
+
+    /// The search field, our own rather than `.searchable`: the system's drawer sat where the
+    /// pull-to-refresh spinner draws, so the spinner appeared inside the field. Pinned under the
+    /// title by a safe-area inset; the list and its spinner scroll beneath it.
+    private var searchField: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
+            TextField("Search chats", text: $searchText)
+                .textInputAutocapitalization(.never).autocorrectionDisabled()
+                .submitLabel(.search)
+            if !searchText.isEmpty {
+                Button { searchText = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary) }
+                    .buttonStyle(.plain).accessibilityLabel("Clear search")
+            }
+        }
+        .padding(.horizontal, 14).padding(.vertical, 9)
+        .glassEffect(.regular, in: .capsule)
+        .padding(.horizontal, 16).padding(.top, 2).padding(.bottom, 6)
+    }
+
+    @ViewBuilder private func list(_ runtime: GatewayRuntime) -> some View {
+        let rows = filtered(searchText.isEmpty ? sessions : searchResults, runtime: runtime)
+        ScrollViewReader { proxy in
+        List {
+            if let errorText { Text(errorText).foregroundStyle(.red).font(.footnote) }
+            // With the "Group chats" filter on, rooms sit among the chats by recency, as chats.
+            let visibleRooms = groupsOnly
+                ? rooms.filter { (showArchived || !archivedRooms.contains($0.roomId)) && (searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText)) }
+                : []
+            let entries = Self.merge(rows, visibleRooms, sort: sortKey)
+            if entries.isEmpty && !loading {
+                ContentUnavailableView(searchText.isEmpty ? "No chats yet" : "No results", systemImage: "bubble.left.and.bubble.right",
+                                       description: Text(searchText.isEmpty ? "Start a new chat with the compose button." : "Try another search."))
+                    .listRowSeparator(.hidden)
+            }
+            ForEach(entries) { entry in
+                switch entry {
+                case .session(let s): sessionRow(s, runtime: runtime)
+                case .room(let room): roomRow(room, runtime: runtime)
+                }
+            }
+        }
+        .listStyle(.insetGrouped)
+        .safeAreaInset(edge: .top, spacing: 0) { searchField }
+        // The grouped list otherwise leaves a section's worth of empty space under the search bar.
+        .contentMargins(.top, 0, for: .scrollContent)
+        // Wider rows: the card hugs the screen edges and the rows their card.
+        .contentMargins(.horizontal, ChatRowStyle.cardInset, for: .scrollContent)
+        // The bots in the rows look where the list is going.
+        .onScrollGeometryChange(for: CGFloat.self) { $0.contentOffset.y } action: { old, new in BotAmbient.shared.scrolled(dy: new - old) }
+        .overlay { if loading && sessions.isEmpty { ProgressView() } }
+        .safeAreaInset(edge: .top, spacing: 0) {
+            if let msg = runtime.restartRequired {
+                RestartRequiredBanner(runtime: runtime, message: msg)
+                    .padding(.horizontal, 16).padding(.top, 4).padding(.bottom, 8)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+            }
+        }
+        .animation(.snappy, value: runtime.restartRequired == nil)
+        .onChange(of: scrollToTop) { _, _ in
+            let first = Self.merge(rows, groupsOnly ? rooms : [], sort: sortKey).first?.id ?? rows.first?.id
+            if let first { withAnimation(.snappy) { proxy.scrollTo(first, anchor: .top) } }
+        }
+        }
+    }
+
+    private func load(attempt: Int = 0) async {
+        guard let runtime else { return }
+        let cacheProfile = allBots ? "*" : runtime.selectedProfile
+        if sessions.isEmpty {
+            sessions = SessionCache.load(connection: runtime.connection.id, profile: cacheProfile)
+            // A cold launch before the bot is known: any list for this gateway beats a blank page.
+            if sessions.isEmpty { sessions = SessionCache.loadAny(connection: runtime.connection.id) }
+        }
+        loading = sessions.isEmpty; defer { loading = false }
+        do {
+            var all: [StoredSession] = []
+            if allBots {
+                let profiles = runtime.profiles.map(\.name)
+                try await withThrowingTaskGroup(of: [StoredSession].self) { group in
+                    for p in profiles {
+                        group.addTask {
+                            let r: SessionListResponse = try await runtime.api.get("/api/sessions", query: [URLQueryItem(name: "order", value: "recent"), URLQueryItem(name: "limit", value: "50")], profile: p)
+                            return r.sessions.map { var s = $0; if s.profile == nil || s.profile!.isEmpty { s.profile = p }; return s }
+                        }
+                    }
+                    for try await part in group { all += part }
+                }
+            } else {
+                let r: SessionListResponse = try await runtime.api.get("/api/sessions", query: [URLQueryItem(name: "order", value: "recent"), URLQueryItem(name: "limit", value: "100")], profile: runtime.selectedProfile)
+                all = r.sessions
+            }
+            // Chats open in the app that the gateway does not list yet: a new chat gets its
+            // stored row on the first prompt and the row fills in as the turn flushes, so a chat
+            // started moments ago (or one still running) could vanish from the list on the way
+            // back from it. They stay listed from the live session until the gateway has them.
+            let listed = Set(all.map(\.id))
+            // A pin is an explicit keep: a pinned row the gateway's page happened to leave out
+            // (a lineage that moved to a new tip, a listing window) stays from the last load
+            // until the gateway lists it again unpinned, or the user deletes it here.
+            for old in sessions where old.pinned == true && old.archived != true && !listed.contains(old.id) && !droppedIDs.contains(old.id) {
+                all.append(old)
+            }
+            let now = Date().timeIntervalSince1970
+            for chat in runtime.chats where !listed.contains(chat.storedID) && !chat.storedID.isEmpty
+                && (chat.isRunning || !chat.items.isEmpty)
+                && (allBots || chat.profileName == (runtime.selectedProfile ?? chat.profileName)) {
+                let last = chat.items.last?.timestamp.timeIntervalSince1970 ?? now
+                all.append(StoredSession(id: chat.storedID, title: chat.title == "New chat" ? nil : chat.title,
+                                         preview: chat.items.first.flatMap { if case .user(let t, _) = $0.kind { return t }; return nil },
+                                         source: "ios", model: chat.modelName.isEmpty ? nil : chat.modelName,
+                                         startedAt: chat.items.first?.timestamp.timeIntervalSince1970 ?? now, lastActive: max(last, now - 1),
+                                         messageCount: chat.items.count, isActive: chat.isRunning, archived: false, pinned: false, profile: chat.profileName))
+            }
+            sessions = all.sorted { ($0.pinned ?? false ? 1 : 0, $0.lastActive ?? 0) > ($1.pinned ?? false ? 1 : 0, $1.lastActive ?? 0) }
+            SessionCache.save(sessions, connection: runtime.connection.id, profile: cacheProfile)
+            errorText = nil
+            // Group chats live on the gateway's room driver; none when it has no rooms.
+            if let r: GroupsListResult = try? await runtime.rpc("groups.list", ["limit": 50], timeout: 10).decode() {
+                rooms = r.rooms.filter { $0.disbandedAt == nil }
+            }
+        } catch is CancellationError {
+            // A newer load (the bot or the gateway changed) took over.
+        } catch {
+            if error.localizedDescription.localizedCaseInsensitiveContains("cancelled") { return }
+            errorText = error.localizedDescription
+            // A cold launch can ask before the session is refreshed or the gateway answers:
+            // a blank page with nothing cached tries again a few times before giving up.
+            if sessions.isEmpty, attempt < 3, !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(2))
+                guard !Task.isCancelled else { return }
+                await load(attempt: attempt + 1)
+            }
+        }
+    }
+
+    private func search(_ q: String) async {
+        guard let runtime, !q.trimmingCharacters(in: .whitespaces).isEmpty else { searchResults = []; return }
+        do {
+            let r: JSONValue = try await runtime.api.get("/api/sessions/search", query: [URLQueryItem(name: "q", value: q)], profile: runtime.selectedProfile)
+            let arr = r["sessions"]?.arrayValue ?? r["results"]?.arrayValue ?? r.arrayValue ?? []
+            searchResults = arr.compactMap { try? $0.decode(StoredSession.self) }
+        } catch { errorText = error.localizedDescription }
+    }
+
+    /// A row of the list: a chat, or a group chat when the filter lets them in.
+    enum ListEntry: Identifiable {
+        case session(StoredSession), room(Room)
+        var id: String { switch self { case .session(let s): return s.id; case .room(let r): return "room:" + r.roomId } }
+        var pinned: Bool { if case .session(let s) = self { return s.pinned ?? false }; return false }
+        var date: Double { switch self { case .session(let s): return s.lastActive ?? 0; case .room(let r): return r.updatedAt } }
+    }
+
+    /// The chats in the order `filtered` chose; group chats join them by recency under the
+    /// Recent order, by name under Title, and after them otherwise. (This used to re-sort
+    /// everything by date, which undid the Title / Bot / Model orders.)
+    private static func merge(_ sessions: [StoredSession], _ rooms: [Room], sort: String = "recent") -> [ListEntry] {
+        let chats = sessions.map(ListEntry.session)
+        guard !rooms.isEmpty else { return chats }
+        switch sort {
+        case "recent":
+            return (chats + rooms.map(ListEntry.room)).sorted { ($0.pinned ? 1 : 0, $0.date) > ($1.pinned ? 1 : 0, $1.date) }
+        case "title":
+            let byName = rooms.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }.map(ListEntry.room)
+            var out: [ListEntry] = [], r = byName.makeIterator(), next = r.next()
+            for c in chats {
+                if case .session(let s) = c {
+                    while let n = next, case .room(let room) = n, !(s.pinned ?? false),
+                          room.name.localizedCaseInsensitiveCompare(s.displayTitle) == .orderedAscending { out.append(n); next = r.next() }
+                }
+                out.append(c)
+            }
+            while let n = next { out.append(n); next = r.next() }
+            return out
+        default:
+            return chats + rooms.sorted { $0.updatedAt > $1.updatedAt }.map(ListEntry.room)
+        }
+    }
+
+    @ViewBuilder private func sessionRow(_ s: StoredSession, runtime: GatewayRuntime) -> some View {
+                NavigationLink(value: ChatRoute(storedID: s.id, title: s.displayTitle, profile: allBots ? s.profile : nil)) {
+                    SessionRow(session: s, needsYou: runtime.needsAttention.contains(s.id), live: runtime.chatForStored(s.id)?.isRunning ?? false, showBot: allBots,
+                               thinking: runtime.chatForStored(s.id).map { $0.isRunning && ($0.statusLine ?? "Thinking…") == "Thinking…" } ?? false,
+                               summary: summarizer.shown(summarizer.summary(for: s), title: s.displayTitle, preview: s.preview ?? ""))
+                        .task(id: "\(s.id)-\(s.lastActive ?? 0)-\(aiSummaries)") { if aiSummaries { summarizer.refresh(s, runtime: runtime, profile: allBots ? s.profile : nil) } }
+                }
+                .listRowInsets(EdgeInsets(top: 10, leading: ChatRowStyle.rowInset, bottom: 10, trailing: 8))
+                .contextMenu {
+                    Button { path.append(ChatRoute(storedID: s.id, title: s.displayTitle, profile: allBots ? s.profile : nil)) } label: { Label("Open", systemImage: "bubble.left") }
+                    Button { Task { await patch(s, ["pinned": .bool(!(s.pinned ?? false))]) } } label: { Label(s.pinned == true ? "Unpin" : "Pin", systemImage: s.pinned == true ? "pin.slash" : "pin") }
+                    Button { Task { await patch(s, ["archived": .bool(!(s.archived ?? false))]) } } label: { Label(s.archived == true ? "Unarchive" : "Archive", systemImage: "archivebox") }
+                    Divider()
+                    Button(role: .destructive) { pendingDelete = s } label: { Label("Delete", systemImage: "trash") }
+                } preview: {
+                    SessionPreview(session: s, runtime: runtime, profile: allBots ? s.profile : nil)
+                }
+                // Delete alone on the trailing edge; Archive lives with Pin on the leading edge so
+                // the two are never a thumb-width apart.
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button(role: .destructive) { pendingDelete = s } label: { Label("Delete", systemImage: "trash") }
+                }
+                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                    Button { Task { await patch(s, ["pinned": .bool(!(s.pinned ?? false))]) } } label: { Label(s.pinned == true ? "Unpin" : "Pin", systemImage: s.pinned == true ? "pin.slash" : "pin") }.tint(.yellow)
+                    Button { Task { await patch(s, ["archived": .bool(!(s.archived ?? false))]) } } label: { Label(s.archived == true ? "Unarchive" : "Archive", systemImage: "archivebox") }.tint(.orange)
+                }
+    }
+
+    @ViewBuilder private func roomRow(_ room: Room, runtime: GatewayRuntime) -> some View {
+        let archived = archivedRooms.contains(room.roomId)
+        let log = roomLogs[room.roomId] ?? []
+        let summary = summarizer.shown(summarizer.summary(forRoom: room, events: log), title: room.name, preview: Self.lastLine(room, log) ?? "")
+                NavigationLink(value: RoomRoute(room: room, initialText: nil)) {
+                    HStack(spacing: 12) {
+                        HStack(spacing: -12) {
+                            ForEach(Array(room.members.prefix(3).enumerated()), id: \.offset) { _, m in
+                                BotAvatar(profile: m.profile ?? m.handle ?? "?", size: 30)
+                            }
+                        }
+                        VStack(alignment: .leading, spacing: 3) {
+                            HStack(spacing: 6) {
+                                if archived { Image(systemName: "archivebox").font(.caption2).foregroundStyle(.secondary) }
+                                Image(systemName: "person.2.fill").font(.caption2).foregroundStyle(.secondary)
+                                Text(summary?.title ?? room.name).font(.body.weight(.medium)).lineLimit(1)
+                                if summary != nil { Image(systemName: "sparkles").font(.caption2).foregroundStyle(.secondary) }
+                            }
+                            // The summary, else the last thing said, else who is in it.
+                            Text(summary?.summary ?? Self.lastLine(room, log) ?? room.members.compactMap { $0.displayName ?? $0.handle ?? $0.profile }.joined(separator: ", "))
+                                .font(.subheadline).foregroundStyle(.secondary).lineLimit(2)
+                        }
+                    }
+                }
+                .listRowInsets(EdgeInsets(top: 10, leading: ChatRowStyle.rowInset, bottom: 10, trailing: 8))
+                .task(id: "\(room.roomId)-\(room.latestSeq ?? 0)-\(aiSummaries)") {
+                    if roomLogs[room.roomId] == nil || (room.latestSeq ?? 0) > (roomLogs[room.roomId]?.last?.seq ?? 0),
+                       let r: GroupsLogResult = try? await runtime.rpc("groups.log", ["room_id": .string(room.roomId), "since_seq": 0, "limit": 40], timeout: 10).decode() {
+                        roomLogs[room.roomId] = r.events
+                    }
+                    if aiSummaries, let events = roomLogs[room.roomId] { summarizer.refreshRoom(room, events: events) }
+                }
+                .contextMenu {
+                    Button { path.append(RoomRoute(room: room, initialText: nil)) } label: { Label("Open", systemImage: "bubble.left") }
+                    Button { setArchived(room, !archived) } label: { Label(archived ? "Unarchive" : "Archive", systemImage: "archivebox") }
+                    Divider()
+                    Button(role: .destructive) { pendingRoomDelete = room } label: { Label("Delete", systemImage: "trash") }
+                } preview: {
+                    RoomPreview(room: room, runtime: runtime)
+                }
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button(role: .destructive) { pendingRoomDelete = room } label: { Label("Delete", systemImage: "trash") }
+                }
+                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                    Button { setArchived(room, !archived) } label: { Label(archived ? "Unarchive" : "Archive", systemImage: "archivebox") }.tint(.orange)
+                }
+    }
+
+    /// "You: …" or "Hermes: …" from the last message in a room's log.
+    private static func lastLine(_ room: Room, _ log: [RoomEvent]) -> String? {
+        guard let ev = log.last(where: { $0.kind.hasPrefix("message.") }) else { return nil }
+        // Plain words for a one-line preview: no markdown marks, no line breaks.
+        let text = (ev.payload["text"]?.stringValue ?? ev.payload["content"]?.stringValue ?? "")
+            .replacingOccurrences(of: "**", with: "").replacingOccurrences(of: "`", with: "").replacingOccurrences(of: "\n", with: " ")
+        guard !text.isEmpty else { return nil }
+        if ev.kind == "message.user" { return "You: \(text)" }
+        let who = ev.payload["member_id"]?.stringValue ?? ev.actor.id
+        let name = room.members.first { $0.memberId == who || $0.handle == who }?.displayName ?? who
+        return "\(name): \(text)"
+    }
+
+    private func setArchived(_ room: Room, _ on: Bool) {
+        var set = archivedRooms
+        if on { set.insert(room.roomId) } else { set.remove(room.roomId) }
+        archivedRoomsRaw = set.sorted().joined(separator: ",")
+    }
+
+    private func deleteRoom(_ room: Room) async {
+        guard let runtime else { return }
+        do {
+            // Gateways name it differently; try the common ones before giving up.
+            var lastError: Error?
+            for method in ["groups.disband", "groups.delete", "groups.close"] {
+                do { _ = try await runtime.rpc(method, ["room_id": .string(room.roomId)]); lastError = nil; break }
+                catch { lastError = error }
+            }
+            if let lastError { throw lastError }
+            rooms.removeAll { $0.roomId == room.roomId }
+            setArchived(room, false)
+        } catch { errorText = "Could not delete the group chat: \(error.localizedDescription)" }
+    }
+
+    private func delete(_ s: StoredSession) async {
+        droppedIDs.insert(s.id)
+        guard let runtime else { return }
+        if let chat = runtime.chatForStored(s.id) { runtime.closeChat(chat) }
+        let _: JSONValue? = try? await runtime.api.send("DELETE", "/api/sessions/\(s.id)", profile: runtime.selectedProfile, body: EmptyBody())
+        await load()
+    }
+
+    private func patch(_ s: StoredSession, _ fields: [String: JSONValue]) async {
+        guard let runtime else { return }
+        var body = fields
+        if let p = runtime.selectedProfile { body["profile"] = .string(p) }
+        let _: JSONValue? = try? await runtime.api.send("PATCH", "/api/sessions/\(s.id)", json: .object(body))
+        await load()
+    }
+}
+
+struct SessionRow: View {
+    var session: StoredSession
+    var needsYou: Bool
+    var live: Bool
+    var showBot = false
+    var thinking = false
+    /// The on-device summary, when Kitty Summaries is on and one is ready for this chat.
+    var summary: ChatSummarizer.Summary? = nil
+
+    var body: some View {
+        HStack(spacing: 12) {
+            // In the list: the eyes and the held pose (a squint, the pebble), no routines.
+            if showBot { BotAvatar(profile: session.profile ?? "?", size: 34, active: live, mood: BotFaceView.Mood(state: live ? (thinking ? .thinking : .streaming) : .idle)) }
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(spacing: 6) {
+                    if session.pinned == true { Image(systemName: "pin.fill").font(.caption2).foregroundStyle(.secondary) }
+                    Text(summary?.title ?? session.displayTitle).font(.body.weight(.medium)).lineLimit(1)
+                    if summary != nil { Image(systemName: "sparkles").font(.caption2).foregroundStyle(.secondary).accessibilityLabel("Summarized on device") }
+                }
+                Text(summary?.summary ?? session.preview ?? "").font(.subheadline).foregroundStyle(.secondary).lineLimit(ChatRowStyle.previewLines)
+                HStack(spacing: 8) {
+                    if let m = session.model, !m.isEmpty { Text(m).font(.caption2).foregroundStyle(.tertiary).lineLimit(1) }
+                    if let d = session.lastDate { Text(d, format: .relative(presentation: .named)).font(.caption2).foregroundStyle(.tertiary) }
+                }
+            }
+            Spacer(minLength: 0)
+            if needsYou {
+                Text("Needs you").font(.caption2.weight(.semibold)).padding(.horizontal, 8).padding(.vertical, 4)
+                    .background(.red.opacity(0.15), in: .capsule).foregroundStyle(.red)
+            } else if live {
+                ProgressView().controlSize(.small)
+            }
+        }
+        .padding(.vertical, 2)
+    }
+}
+
+
+/// The long-press peek for a chat row: the tail of the conversation as small bubbles, like
+/// peeking a thread in Messages. Open stays in the menu; SwiftUI previews cannot be tapped through.
+struct SessionPreview: View {
+    var session: StoredSession
+    var runtime: GatewayRuntime?
+    var profile: String?
+    @State private var messages: [TranscriptMessage] = []
+    @State private var loaded = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                BotAvatar(profile: session.profile ?? profile ?? runtime?.selectedProfile ?? "?", size: 24)
+                Text(session.displayTitle).font(.headline).lineLimit(1)
+                Spacer(minLength: 0)
+            }
+            if messages.isEmpty {
+                if let p = session.preview, !p.isEmpty {
+                    Text(p).font(.subheadline).foregroundStyle(.secondary).lineLimit(6)
+                }
+                if !loaded { ProgressView().controlSize(.small).frame(maxWidth: .infinity) }
+            } else {
+                VStack(spacing: 6) {
+                    ForEach(Array(messages.enumerated()), id: \.offset) { _, m in
+                        HStack {
+                            if m.role == "user" { Spacer(minLength: 40) }
+                            Text(m.text ?? "").font(.footnote).lineLimit(4)
+                                .padding(.horizontal, 10).padding(.vertical, 6)
+                                .foregroundStyle(m.role == "user" ? .white : .primary)
+                                .background(m.role == "user" ? Color.accentColor : Color(.systemGray5), in: .rect(cornerRadius: 12))
+                            if m.role != "user" { Spacer(minLength: 40) }
+                        }
+                    }
+                }
+            }
+            HStack(spacing: 10) {
+                if let n = session.messageCount { Label("\(n) messages", systemImage: "text.bubble") }
+                if let m = session.model, !m.isEmpty { Label(m.split(separator: "/").last.map(String.init) ?? m, systemImage: "cpu").lineLimit(1) }
+                if let d = session.lastDate { Text(d, format: .relative(presentation: .named)) }
+            }
+            .font(.caption).foregroundStyle(.tertiary)
+        }
+        .padding(16)
+        .frame(width: 340, alignment: .leading)
+        .task {
+            defer { loaded = true }
+            if let cached = runtime.flatMap({ TranscriptCache.load(connection: $0.connection.id, storedID: session.id) }), !cached.isEmpty {
+                messages = Array(cached.filter { $0.role == "user" || $0.role == "assistant" }.suffix(6)); return
+            }
+            guard let runtime, let r: JSONValue = try? await runtime.api.get("/api/sessions/\(session.id)/messages",
+                                                                             query: [URLQueryItem(name: "order", value: "latest"), URLQueryItem(name: "limit", value: "12")],
+                                                                             profile: profile ?? session.profile ?? runtime.selectedProfile) else { return }
+            let all = (r["messages"]?.arrayValue ?? []).compactMap { try? $0.decode(TranscriptMessage.self) }
+            messages = Array(all.filter { ($0.role == "user" || $0.role == "assistant") && !($0.text ?? "").isEmpty }.suffix(6))
+        }
+    }
+}
+
+/// The long-press peek for a group chat: the bots in it and the last few messages.
+struct RoomPreview: View {
+    var room: Room
+    var runtime: GatewayRuntime
+    @State private var events: [RoomEvent] = []
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                HStack(spacing: -10) {
+                    ForEach(Array(room.members.prefix(4).enumerated()), id: \.offset) { _, m in BotAvatar(profile: m.profile ?? m.handle ?? "?", size: 26) }
+                }
+                Text(room.name).font(.headline).lineLimit(1)
+                Spacer(minLength: 0)
+            }
+            Text(room.members.compactMap { $0.displayName ?? $0.handle ?? $0.profile }.joined(separator: ", ")).font(.caption).foregroundStyle(.secondary)
+            VStack(spacing: 6) {
+                ForEach(events.suffix(5)) { ev in
+                    let user = ev.kind == "message.user"
+                    HStack {
+                        if user { Spacer(minLength: 40) }
+                        Text(ev.payload["text"]?.stringValue ?? "").font(.footnote).lineLimit(3)
+                            .padding(.horizontal, 10).padding(.vertical, 6)
+                            .foregroundStyle(user ? .white : .primary)
+                            .background(user ? Color.accentColor : Color(.systemGray5), in: .rect(cornerRadius: 12))
+                        if !user { Spacer(minLength: 40) }
+                    }
+                }
+            }
+            Label("Group chat", systemImage: "person.3").font(.caption).foregroundStyle(.tertiary)
+        }
+        .padding(16)
+        .frame(width: 340, alignment: .leading)
+        .task {
+            if let r: GroupsLogResult = try? await runtime.rpc("groups.log", ["room_id": .string(room.roomId), "since_seq": 0, "limit": 60], timeout: 10).decode() {
+                events = r.events.filter { $0.kind == "message.user" || $0.kind == "message.member" }
+            }
+        }
+    }
+}
+
+/// How much room the chat rows get. DEBUG: `-kitty-row-style a|b|c` tries the variants
+/// (a = the old spacing, b = tighter, c = tighter with a three-line preview).
+enum ChatRowStyle {
+    static let variant: String = {
+        #if DEBUG
+        let args = ProcessInfo.processInfo.arguments
+        if let i = args.firstIndex(of: "-kitty-row-style"), i + 1 < args.count { return args[i + 1] }
+        #endif
+        return "b"
+    }()
+    static var cardInset: CGFloat { variant == "a" ? 16 : 8 }
+    static var rowInset: CGFloat { variant == "a" ? 16 : 12 }
+    static var previewLines: Int { variant == "c" ? 3 : 2 }
+}
+
+/// A group chat as a navigation value, with the first message when it was just started.
+struct RoomRoute: Hashable {
+    var room: Room
+    var initialText: String?
+}

@@ -16,7 +16,7 @@ struct HermesLiveActivityBundle: WidgetBundle {
 extension HermesTurnAttributes {
     /// A tap anywhere on the activity opens this chat, on its bot.
     var chatURL: URL? {
-        var c = URLComponents(); c.scheme = "vory"; c.host = "chat"; c.path = "/" + storedSessionID
+        var c = URLComponents(); c.scheme = "kitty"; c.host = "chat"; c.path = "/" + storedSessionID
         if !profile.isEmpty { c.queryItems = [URLQueryItem(name: "profile", value: profile)] }
         return c.url
     }
@@ -352,7 +352,7 @@ struct LockScreenTurnView: View {
 struct ApprovalButtons: View {
     var attributes: HermesTurnAttributes
     private func url(_ choice: String) -> URL {
-        var c = URLComponents(); c.scheme = "vory"; c.host = "approval"
+        var c = URLComponents(); c.scheme = "kitty"; c.host = "approval"
         c.queryItems = [URLQueryItem(name: "session", value: attributes.storedSessionID), URLQueryItem(name: "choice", value: choice)]
         return c.url!
     }

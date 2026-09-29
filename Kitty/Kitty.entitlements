@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Remote notifications for approvals, clarify prompts, finished turns and cron results.
+	     Xcode rewrites this to "production" when archiving for TestFlight / the App Store.
+	     Requires a paid Apple Developer Program membership; a free Personal Team cannot
+	     provision it and signing will fail with "no profiles were found". -->
+	<key>aps-environment</key>
+	<string>development</string>
+	<!-- Shared with the Live Activity / widgets and the watch app: gateways + widget snapshot. -->
+	<!-- Notifications from a bot are presented as messages from it (its avatar as the icon). -->
+	<key>com.apple.developer.usernotifications.communication</key>
+	<true/>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)com.vorantx.kitty.shared</string>
+	</array>
+</dict>
+</plist>

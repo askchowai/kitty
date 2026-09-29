@@ -1,4 +1,4 @@
-// Vory push relay. Devices register (install id + a secret the phone made up); the user's own
+// Kitty push relay. Devices register (install id + a secret the phone made up); the user's own
 // Hermes gateway then posts *encrypted* notification payloads for that install id. The relay only
 // ever sees device tokens and ciphertext; the app's Notification Service Extension decrypts.
 //
@@ -100,7 +100,7 @@ async function push(request, env) {
     if (typeof b.enc !== "string" || b.enc.length > 8192) return reply(400, { error: "enc required" });
     // Placeholder text: the extension replaces it after decrypting `enc`.
     payload = {
-      aps: { "mutable-content": 1, alert: { title: "Vory", body: "New activity" }, sound: "default",
+      aps: { "mutable-content": 1, alert: { title: "Kitty", body: "New activity" }, sound: "default",
              category: "HERMES_ENC", "thread-id": b.thread_id || "",
              "interruption-level": b.interruption === "time-sensitive" ? "time-sensitive" : "active" },
       enc: b.enc,
@@ -123,7 +123,7 @@ async function push(request, env) {
     }
     // An alerting update: the Island expands and the phone buzzes. Plain words only, by design.
     if (b.alert && typeof b.alert === "object") {
-      payload.aps.alert = { title: String(b.alert.title || "Vory").slice(0, 80), body: String(b.alert.body || "").slice(0, 160), sound: "default" };
+      payload.aps.alert = { title: String(b.alert.title || "Kitty").slice(0, 80), body: String(b.alert.body || "").slice(0, 160), sound: "default" };
     }
   } else if (type === "sound") {
     // A buzz with nothing to read: the phone plays its notification sound and haptic but shows no

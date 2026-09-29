@@ -7,7 +7,7 @@ set -u
 cd "$(dirname "$0")/../.." || exit 1
 [ -f Tools/release/.env ] && . Tools/release/.env
 : "${CLOUDFLARE_API_TOKEN:?set in Tools/release/.env}" "${CLOUDFLARE_ACCOUNT_ID:?set in Tools/release/.env}"
-WORKER="${RELAY_WORKER_NAME:-vory-push-relay}"
+WORKER="${RELAY_WORKER_NAME:-kitty-push-relay}"
 WARN="${RELAY_WARN_PER_DAY:-60000}"
 
 query() {

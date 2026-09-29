@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Archive Vory and upload it to TestFlight, non-interactively.
+# Archive Kitty and upload it to TestFlight, non-interactively.
 #
 # Needs an App Store Connect API key, so no Apple ID password or 2FA prompt is involved.
 # Configure it once by exporting these (or putting them in Tools/release/.env, which is gitignored):
@@ -7,11 +7,11 @@
 #   ASC_KEY_ID=ABCD123456                 # the API key's Key ID
 #   ASC_ISSUER_ID=aaaaaaaa-bbbb-....      # the Issuer ID from the Keys page
 #   ASC_KEY_PATH=$HOME/.appstoreconnect/private_keys/AuthKey_ABCD123456.p8
-#   VORY_PUSH_RELAY_URL=https://vory-push-relay.example.workers.dev   # optional: the push relay you deployed
+#   KITTY_PUSH_RELAY_URL=https://kitty-push-relay.example.workers.dev   # optional: the push relay you deployed
 #
 # One-time setup that must happen in a browser first, because Apple allows no other route:
 #   1. Accept any pending agreements in App Store Connect.
-#   2. Create the app record for the bundle id below, named "Vory: Hermes Agent UI".
+#   2. Create the app record for the bundle id below, named "Kitty: Hermes Agent UI".
 # After that this script can run unattended for every subsequent build.
 
 set -euo pipefail
@@ -20,9 +20,9 @@ cd "$(dirname "$0")/../.."
 ROOT="$PWD"
 [ -f Tools/release/.env ] && . Tools/release/.env
 
-PROJECT="Vory.xcodeproj"
-SCHEME="Vory"
-BUNDLE_ID="com.vorantx.vory"
+PROJECT="Kitty.xcodeproj"
+SCHEME="Kitty"
+BUNDLE_ID="com.vorantx.kitty"
 ARCHIVE_DIR="${ARCHIVE_DIR:-$ROOT/build/archives}"
 
 fail() { printf '\n%s\n' "$1" >&2; exit 1; }
@@ -56,7 +56,7 @@ if [ -z "${BUILD_NUMBER:-}" ]; then
     BUILD_NUMBER="$(next_build_number)" || fail "Could not read the existing builds from App Store Connect to pick the next build number. Pass BUILD_NUMBER=<n> to override."
 fi
 
-ARCHIVE="$ARCHIVE_DIR/Vory-$BUILD_NUMBER.xcarchive"
+ARCHIVE="$ARCHIVE_DIR/Kitty-$BUILD_NUMBER.xcarchive"
 mkdir -p "$ARCHIVE_DIR"
 
 AUTH=(-authenticationKeyPath "$ASC_KEY_PATH"
@@ -74,7 +74,7 @@ xcodebuild archive \
     "${AUTH[@]}" \
     CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
     MARKETING_VERSION="$MARKETING_VERSION" \
-    VORY_PUSH_RELAY_URL="${VORY_PUSH_RELAY_URL:-}" \
+    KITTY_PUSH_RELAY_URL="${KITTY_PUSH_RELAY_URL:-}" \
     | grep -E 'error:|warning: .*(signing|provision)|ARCHIVE' || true
 
 [ -d "$ARCHIVE" ] || fail "Archive was not produced. Re-run without the grep filter to see why."

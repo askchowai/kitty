@@ -22,18 +22,18 @@
 	<string>Apple Distribution</string>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>com.vorantx.vory.notifications</key>
-		<string>Vory Notification Service App Store</string>
-		<key>com.vorantx.vory.notificationcontent</key>
-		<string>Vory Notification Content App Store</string>
-		<key>com.vorantx.vory.watchkitapp</key>
-		<string>Vory Watch App Store</string>
-		<key>com.vorantx.vory.watchkitapp.complications</key>
-		<string>Vory Watch Complications App Store</string>
-		<key>com.vorantx.vory</key>
-		<string>Vory App Store</string>
-		<key>com.vorantx.vory.LiveActivity</key>
-		<string>Vory LiveActivity App Store</string>
+		<key>com.vorantx.kitty.notifications</key>
+		<string>Kitty Notification Service App Store</string>
+		<key>com.vorantx.kitty.notificationcontent</key>
+		<string>Kitty Notification Content App Store</string>
+		<key>com.vorantx.kitty.watchkitapp</key>
+		<string>Kitty Watch App Store</string>
+		<key>com.vorantx.kitty.watchkitapp.complications</key>
+		<string>Kitty Watch Complications App Store</string>
+		<key>com.vorantx.kitty</key>
+		<string>Kitty App Store</string>
+		<key>com.vorantx.kitty.LiveActivity</key>
+		<string>Kitty LiveActivity App Store</string>
 	</dict>
 </dict>
 </plist>

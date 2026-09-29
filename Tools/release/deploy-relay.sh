@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Deploys the push relay (server/push-relay) to Cloudflare non-interactively and records its URL
-# in Tools/release/.env as VORY_PUSH_RELAY_URL, which the release script bakes into the app.
+# in Tools/release/.env as KITTY_PUSH_RELAY_URL, which the release script bakes into the app.
 #
 # Needs in Tools/release/.env:
 #   CLOUDFLARE_API_TOKEN    (Edit Cloudflare Workers template)
@@ -47,10 +47,10 @@ curl -fsS "$URL/v1/health" >/dev/null || fail "$URL/v1/health did not answer"
 
 cd ../..
 ENV=Tools/release/.env
-if grep -q '^export VORY_PUSH_RELAY_URL=' "$ENV"; then
-    sed -i '' "s|^export VORY_PUSH_RELAY_URL=.*|export VORY_PUSH_RELAY_URL=$URL|" "$ENV"
+if grep -q '^export KITTY_PUSH_RELAY_URL=' "$ENV"; then
+    sed -i '' "s|^export KITTY_PUSH_RELAY_URL=.*|export KITTY_PUSH_RELAY_URL=$URL|" "$ENV"
 else
-    echo "export VORY_PUSH_RELAY_URL=$URL" >> "$ENV"
+    echo "export KITTY_PUSH_RELAY_URL=$URL" >> "$ENV"
 fi
 cat <<EOS
 

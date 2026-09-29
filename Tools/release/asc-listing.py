@@ -86,7 +86,7 @@ def screenshots():
     # Replace: delete what is there, upload the folder in order.
     st, d = call('GET', f'/appScreenshotSets/{sid}/appScreenshots')
     for s in d.get('data', []): call('DELETE', f'/appScreenshots/{s["id"]}')
-    tmp = '/tmp/vory-shots'; os.makedirs(tmp, exist_ok=True)
+    tmp = '/tmp/kitty-shots'; os.makedirs(tmp, exist_ok=True)
     ids = []
     for f in files:
         src = os.path.join(SHOTS, f); dst = os.path.join(tmp, f)

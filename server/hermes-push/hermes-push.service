@@ -4,7 +4,7 @@
 #   systemctl --user daemon-reload && systemctl --user enable --now hermes-push
 #   loginctl enable-linger $USER   # keep it running when you are logged out
 [Unit]
-Description=hermes-push — APNs relay for the Vory apps
+Description=hermes-push — APNs relay for the Kitty apps
 After=network-online.target
 Wants=network-online.target
 

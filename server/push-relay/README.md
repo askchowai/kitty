@@ -1,4 +1,4 @@
-# Vory push relay
+# Kitty push relay
 
 End users never touch Apple developer accounts. You — the app's developer — run this small
 Cloudflare Worker once with your APNs key; every user's phone registers with it, and every user's
@@ -23,11 +23,11 @@ wrangler kv namespace create DEVICES          # put the id in wrangler.toml
 wrangler secret put APNS_KEY_P8               # paste the .p8 contents
 wrangler secret put APNS_KEY_ID
 wrangler secret put APNS_TEAM_ID
-wrangler deploy                               # → https://vory-push-relay.<you>.workers.dev
+wrangler deploy                               # → https://kitty-push-relay.<you>.workers.dev
 ```
 
-Then set `VORY_PUSH_RELAY_URL=https://…workers.dev` in `Tools/release/.env`; the release script
-bakes it into the app's Info.plist (`VoryPushRelayURL`). Builds without it fall back to the
+Then set `KITTY_PUSH_RELAY_URL=https://…workers.dev` in `Tools/release/.env`; the release script
+bakes it into the app's Info.plist (`KittyPushRelayURL`). Builds without it fall back to the
 bring-your-own-APNs-key flow.
 
 ## Live Activities and complications

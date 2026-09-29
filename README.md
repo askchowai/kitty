@@ -1,4 +1,4 @@
-# Vory
+# Kitty
 
 A native iPhone / iPad remote for a self-hosted [Hermes Agent](https://hermes-agent.nousresearch.com) backend.
 The agent runs on **your** machine; the app is a full Desktop-class client over the dashboard's REST API and
@@ -21,9 +21,9 @@ the `/api/ws` JSON-RPC socket. Nothing is hardcoded: on first launch you enter t
 - A Hermes Agent install with the dashboard running (`hermes serve` or `hermes dashboard`), reachable from the phone.
 - For push notifications from the background: an Apple Developer team (APNs key) and the `server/hermes-push` companion.
 
-Open `Vory.xcodeproj`, set your team and bundle identifier on the `Vory` and `HermesLiveActivity`
-targets, and run. The app ships as `com.vorantx.vory`, with the Live Activity extension as
-`com.vorantx.vory.LiveActivity`.
+Open `Kitty.xcodeproj`, set your team and bundle identifier on the `Kitty` and `HermesLiveActivity`
+targets, and run. The app ships as `com.vorantx.kitty`, with the Live Activity extension as
+`com.vorantx.kitty.LiveActivity`.
 
 ### Installing on a physical device
 
@@ -195,14 +195,14 @@ Settings → Notifications; everything else works.
 ## Background push without Apple developer work for users
 
 Users never create an APNs key. The developer runs the tiny relay in `server/push-relay/` (a
-Cloudflare Worker holding the APNs key; deploy once, set `VORY_PUSH_RELAY_URL` in
-`Tools/release/.env` so the release script bakes it into `VoryPushRelayURL`). Then:
+Cloudflare Worker holding the APNs key; deploy once, set `KITTY_PUSH_RELAY_URL` in
+`Tools/release/.env` so the release script bakes it into `KittyPushRelayURL`). Then:
 
 1. The phone mints an install id, a relay secret and an AES-256 key, registers its device token
    with the relay, and writes id + secret + key into its device file on the user's gateway.
 2. `hermes-push` on the gateway encrypts each notification (AES-GCM) and posts it to the relay.
    The relay looks up the token and forwards to APNs; it sees ciphertext and tokens only.
-3. `VoryNotificationService/` (a Notification Service Extension) decrypts on the phone and
+3. `KittyNotificationService/` (a Notification Service Extension) decrypts on the phone and
    rewrites the placeholder title/body/category, so actions and deep links work as before.
 
 Live Activity updates and watch complication pushes travel through the relay too, with generic
@@ -210,28 +210,28 @@ content only (no extension can decrypt those). Builds without a relay URL fall b
 bring-your-own-key flow in Settings › Notifications.
 
 **Installing the companion from the app:** Settings › Notifications › *Set up the push
-companion…* uploads the relay to `<home>/plugins/vory-push/` and enables it through
+companion…* uploads the relay to `<home>/plugins/kitty-push/` and enables it through
 `/api/dashboard/agent-plugins/…/enable`; Hermes runs it in-process as a plugin after the next
 gateway restart (one tap in the same screen). The systemd/launchd installer remains as a fallback.
 
 ## Apple Watch, widgets and complications
 
-- **Watch app** (`VoryWatch/`, bundle `com.vorantx.vory.watchkitapp`): recent chats with the ones waiting for
-  you on top, a chat view that streams through the same `VoryCore` runtime as the phone, approval / question /
+- **Watch app** (`KittyWatch/`, bundle `com.vorantx.kitty.watchkitapp`): recent chats with the ones waiting for
+  you on top, a chat view that streams through the same `KittyCore` runtime as the phone, approval / question /
   secret cards sized for the wrist, and a dictation composer. Gateways arrive from the iPhone over
   WatchConnectivity (every saved gateway plus its secrets, as the application context — encrypted by the
   system, latest wins); a session token can also be typed on the watch. Notifications mirrored from the phone
   carry the same Approve once / Deny / Reply actions.
-- **Complications** (`VoryWatchComplications/`, WidgetKit): *Needs you* (waiting approvals), *Current chat*
+- **Complications** (`KittyWatchComplications/`, WidgetKit): *Needs you* (waiting approvals), *Current chat*
   (what the agent is working on) and *Context* (gauge), in circular, rectangular, inline and corner families.
 - **iPhone widgets**: the same three, as lock-screen accessories and home-screen small/medium widgets, shipped
-  inside the existing `HermesLiveActivity` extension. Both read `Widgets/VoryWidgets.swift`.
+  inside the existing `HermesLiveActivity` extension. Both read `Widgets/KittyWidgets.swift`.
 - **Data path**: the running app writes a `WidgetSnapshot` (attention count, recent chats, context %) into a
-  Keychain access group shared by the app, its widgets and the watch app (`…com.vorantx.vory.shared`), so no
+  Keychain access group shared by the app, its widgets and the watch app (`…com.vorantx.kitty.shared`), so no
   App Group is needed. Providers refresh the session list themselves when the snapshot is older than ten
   minutes. `hermes-push` sends the watch `complication` pushes (throttled to one per three minutes) so faces
   update while nothing is open; it never sends the watch alert pushes, because the phone's are mirrored.
-- Tapping any widget or complication opens the chat (`vory://chat/<id>`).
+- Tapping any widget or complication opens the chat (`kitty://chat/<id>`).
 - **Over the iPhone's Bluetooth link watchOS proxies HTTP but not WebSockets**, so the watch reads
   transcripts with `GET /api/sessions/{id}/messages` and polls, and routes prompts, approvals and
   answers through the iPhone over WatchConnectivity (`sendMessage` wakes the phone app). On Wi-Fi or
@@ -239,36 +239,36 @@ gateway restart (one tap in the same screen). The systemd/launchd installer rema
 
 ## Code layout
 
-- `Packages/VoryCore` — everything that talks to a gateway and holds chat state: networking
+- `Packages/KittyCore` — everything that talks to a gateway and holds chat state: networking
   (`GatewayURL`, `RequestSigner`, `HermesAPI`, `GatewaySocket`, `NativeAuth`), wire types, `ChatSession`
   + `StreamAssembler`, `GatewayRuntime`, `MaintenanceModel`, Keychain + `ConnectionStore`. No UIKit,
   AppKit, WatchKit or ActivityKit; it builds for iOS, macOS and watchOS. Platform behaviour is injected
   through three hooks in `Runtime/Hooks.swift`: `TurnActivityReporting` (Live Activity on iOS),
   `CardNotifying` (local notifications) and `PushRegistrationSyncing` (device registration).
-- `Vory/` — the iOS app: SwiftUI views, Live Activity controller, push registrar, app lock.
+- `Kitty/` — the iOS app: SwiftUI views, Live Activity controller, push registrar, app lock.
 - `HermesLiveActivity/` + `Shared/` — the iPhone widget extension (Live Activity + home/lock-screen widgets),
   the `HermesTurnAttributes` it shares with the app, and the app icon. Dates in the content state travel as
   Unix seconds so the push companion can set them.
-- `VoryWatch/`, `VoryWatchComplications/`, `Widgets/` — the watch app, its complications extension, and the
+- `KittyWatch/`, `KittyWatchComplications/`, `Widgets/` — the watch app, its complications extension, and the
   WidgetKit code shared by both widget extensions.
 - `server/hermes-push/` — the APNs relay you run next to Hermes (see its README): `--list`, `--test`,
-  `--dry-run`, `install.sh`. The app bundles a copy (`Vory/Resources/hermes-push/`, kept identical
+  `--dry-run`, `install.sh`. The app bundles a copy (`Kitty/Resources/hermes-push/`, kept identical
   by a unit test; `Tools/sync-push-companion.sh` refreshes it) so Settings › Notifications › *Set up the push
   companion…* can upload it, its config and your APNs key to `<profile home>/push/` and ask Hermes to run the
   installer. The only thing you do by hand is create the APNs key at Apple.
 
 Build the package alone for another platform with
-`cd Packages/VoryCore && xcodebuild -scheme VoryCore -destination 'generic/platform=macOS' build`
+`cd Packages/KittyCore && xcodebuild -scheme KittyCore -destination 'generic/platform=macOS' build`
 (or `watchOS Simulator`).
 
 ## Tests
 
-`VoryTests` (Swift Testing): URL normalization, header injection (Access headers absent when empty),
+`KittyTests` (Swift Testing): URL normalization, header injection (Access headers absent when empty),
 WebSocket ticket/token URL, approval request/response frames, config GET/PUT against a mocked transport, and
 streaming delta assembly / code-fence stabilization. Run with ⌘U or
 
 ```bash
-xcodebuild test -project Vory.xcodeproj -scheme Vory -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+xcodebuild test -project Kitty.xcodeproj -scheme Kitty -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
 ```
 
 Two optional end-to-end suites run against a real gateway when the simulator's environment carries
@@ -277,7 +277,7 @@ Two optional end-to-end suites run against a real gateway when the simulator's e
 - `GatewayIntegrationTests` drives the app's networking stack: the three-leg connection test, REST decoding,
   `client.capabilities`, `session.create`, `prompt.submit`, `message.complete`, usage/context RPCs, then deletes
   the session it created.
-- `VoryUITests` drives the real UI: onboarding → form → Test Connection → Save → new chat → send →
+- `KittyUITests` drives the real UI: onboarding → form → Test Connection → Save → new chat → send →
   Settings → Tools / Config / Env, saving screenshots to the runner's tmp directory.
 
 ```bash
@@ -285,7 +285,7 @@ UDID=<simulator udid>
 xcrun simctl boot $UDID
 xcrun simctl spawn $UDID launchctl setenv HERMES_E2E_URL http://127.0.0.1:9119
 xcrun simctl spawn $UDID launchctl setenv HERMES_E2E_TOKEN "$HERMES_DASHBOARD_SESSION_TOKEN"
-xcodebuild test -project Vory.xcodeproj -scheme Vory -destination "id=$UDID" -parallel-testing-enabled NO
+xcodebuild test -project Kitty.xcodeproj -scheme Kitty -destination "id=$UDID" -parallel-testing-enabled NO
 ```
 
 The streaming assertion is skipped (and reported) when the gateway has no AI provider configured.
@@ -314,18 +314,18 @@ route for them:
    License Agreement waiting, and uploads are rejected until the Account Holder accepts it.
 2. Create the API key with **App Manager** access. A Developer-role key can upload builds but
    cannot create the app record.
-3. Create the app record for `com.vorantx.vory`.
+3. Create the app record for `com.vorantx.kitty`.
 
 App Store Connect fields for that record:
 
 | Field | Value |
 |---|---|
-| Name (30 char limit) | `Vory: Hermes Agent UI` |
-| Bundle ID | `com.vorantx.vory` |
-| SKU | `vory-ios` |
+| Name (30 char limit) | `Kitty: Hermes Agent UI` |
+| Bundle ID | `com.vorantx.kitty` |
+| SKU | `kitty-ios` |
 | Primary language | English (U.S.) |
 
-The home screen name stays `Vory` via `CFBundleDisplayName`; iOS truncates anything longer. Only
+The home screen name stays `Kitty` via `CFBundleDisplayName`; iOS truncates anything longer. Only
 the listing carries the descriptive form.
 
 Everything after that is unattended. Apple occasionally introduces a new agreement that silently
